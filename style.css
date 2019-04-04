@@ -1,0 +1,28 @@
+container {
+  display: grid;
+  grid-template-columns: 40% 60%;
+  grid-template-rows: auto;
+}
+
+form {
+  display: grid;
+  grid-column: 1 / span 1;
+}
+
+.comments {
+  display: grid;
+  grid-column: 2 / span 1;
+  height: 800px;
+  width: 70%;
+  overflow: scroll;
+  margin: 5%;
+  border: 1px black solid;
+  justify-self: center;
+}
+
+#getInfo {
+  width: 70%;
+  display: grid;
+  grid-column: 2 / span 1;
+  justify-self: center;
+}
