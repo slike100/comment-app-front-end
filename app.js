@@ -78,6 +78,9 @@ function postData(url = `https://us-central1-fir-cb-backend.cloudfunctions.net/a
       // fetchComments();
       // document.querySelector('form').reset();
     })
+    .catch(function (error) {
+      return;
+    });
 }
 
 
@@ -90,6 +93,6 @@ function deleteData(item) {
     // fetchComments();
   })
   .catch(function (error) {
-        return;
+    return;
   });
 }

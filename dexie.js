@@ -38,7 +38,7 @@ console.log(addedComments);
     }).catch(function (error) {
           console.error(`Ooops: ${error}`);
     });
-    setTimeout(getCommentsFromAPI, 1000000);
+    setTimeout(getCommentsFromAPI, 100000);
     console.log('IndexDB reload');
 })();
 
@@ -53,7 +53,7 @@ async function populateTableWithIndexDBData(){
     var divHolder = document.createElement('div');
     var list = document.createElement('ul');
 
-    var listAuthor = document.createElement('li');
+    var listAuthor = document.createElement('p');
     listAuthor.innerText = comments[i].author;
     listAuthor.dataset.author = comments[i].author;
     list.append(listAuthor);
@@ -67,6 +67,7 @@ async function populateTableWithIndexDBData(){
     divHolder.addClassName = "smallComments";
 
     var deleteBtn = document.createElement('button');
+    deleteBtn.classList.add('dltBtn');
     deleteBtn.innerText = 'Delete this comment?';
     deleteBtn.dataset._id = comments[i]._id;
     deleteBtn.addEventListener('click', function(e){
@@ -102,9 +103,9 @@ document.querySelector('form').addEventListener('submit', function(e){
 
 //DELETE COMMENT FROM INDEXDB
 function deleteComment(event) {
-  var deletedBook  = db.comments.delete(event.target.dataset._id);
+  var deletedComment  = db.comments.delete(event.target.dataset._id);
 
-  deletedBook.then(function(resolved) {
+  deletedComment.then(function(resolved) {
     console.log(resolved);
     deletedIDS.push(event.target.dataset._id)
     populateTableWithIndexDBData();
