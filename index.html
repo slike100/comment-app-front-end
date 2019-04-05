@@ -7,17 +7,14 @@
   </head>
   <body>
     <container>
-
-
+      <h1>EARTHQUAKE</h1>
       <form>
         <label for="inputEmail4">Name</label>
-        <input minlength="1" type="text" id="nameInput" placeholder="Your Name Here" name="name">
+        <input minlength="0" type="text" id="nameInput" placeholder="Your Name Here" name="author">
         <label for="Author">Comment</label>
-        <input minlength="1" type="text" id="commentInput" placeholder="Comment Here" name="comment">
-        <button type="submit">Submit</button>
+        <input minlength="0" type="text" id="commentInput" placeholder="Comment Here" name="comment">
+        <button class="submitBtn" type="submit">Submit</button>
       </form>
-
-    <button id="getInfo">Get Comments Babaaaaay</button>
 
     <div class="comments">
     </div>
@@ -25,6 +22,8 @@
     </container>
 
     <script defer src="app.js"></script>
+    <script defer src="http://unpkg.com/dexie@latest/dist/dexie.js"></script>
+    <script defer src="dexie.js"></script>
   </body>
 
 </html>
