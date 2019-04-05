@@ -64,6 +64,7 @@ function postData(url = `https://us-central1-fir-cb-backend.cloudfunctions.net/a
   console.log('help');
     return fetch(url, {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
+        mode: "cors", // no-cors, cors, *same-origin
         cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
         credentials: "same-origin", // include, *same-origin, omit
         headers: {

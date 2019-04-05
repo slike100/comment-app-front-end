@@ -38,7 +38,7 @@ console.log(addedComments);
     }).catch(function (error) {
           console.error(`Ooops: ${error}`);
     });
-    setTimeout(getCommentsFromAPI, 100000);
+    setTimeout(getCommentsFromAPI, 30000);
     console.log('IndexDB reload');
 })();
 
@@ -85,7 +85,6 @@ document.querySelector('form').addEventListener('submit', function(e){
   e.preventDefault();
   var myObj = {}
   for (var i = 0; i < e.target.length-1; i++) {
-    console.log(typeof e.target[i].name);
     if(e.target[i].name == false || e.target[i].value == false){
       alert('Name and comment must include something');
       return;
@@ -126,6 +125,7 @@ function addComment(obj) {
 
     populateTableWithIndexDBData();
     sanitizeComment(obj);
+    document.querySelector('form').reset();
 }
 
 // sanitizing comments to send to API
