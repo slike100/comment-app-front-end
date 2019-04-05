@@ -38,7 +38,7 @@ console.log(addedComments);
     }).catch(function (error) {
           console.error(`Ooops: ${error}`);
     });
-    setTimeout(getCommentsFromAPI, 30000);
+    setTimeout(getCommentsFromAPI, 1000000);
     console.log('IndexDB reload');
 })();
 
@@ -124,19 +124,20 @@ function addComment(obj) {
     });
 
     populateTableWithIndexDBData();
-    sanitizeComment(obj);
+    addedComments.push(obj);
+    // sanitizeComment(obj);
     document.querySelector('form').reset();
 }
 
 // sanitizing comments to send to API
-function sanitizeComment(obj){
-  var newObj = {};
-  for (var key in obj) {
-    if(key === 'author'){
-      newObj['name'] = obj[key];
-    } else if(key === 'comment') {
-      newObj[key] = obj[key];
-    }
-  }
-  addedComments.push(newObj);
-}
+// function sanitizeComment(obj){
+//   var newObj = {};
+//   for (var key in obj) {
+//     if(key === 'author'){
+//       newObj['name'] = obj[key];
+//     } else if(key === 'comment') {
+//       newObj[key] = obj[key];
+//     }
+//   }
+//   addedComments.push(newObj);
+// }
