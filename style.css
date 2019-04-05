@@ -2,6 +2,7 @@ container {
   display: grid;
   grid-template-columns: 40% 60%;
   grid-template-rows: repeat(12, 1fr);
+  height: 100vh;
 }
 
 form {
@@ -57,13 +58,15 @@ p {
   display: grid;
   grid-column: 2 / span 1;
   grid-row: 2 /span 10;
-  height: 500px;
+  height: 275px;
   width: 70%;
   overflow: scroll;
   margin-top: 2%;
-  border: 1px gray solid;
+  border: 1px #e0e0e0 solid;
   justify-self: center;
   padding: 5%;
+  margin-bottom: 4%;
+  align-self: center;
 }
 
 h1 {
