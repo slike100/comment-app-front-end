@@ -8,9 +8,27 @@
   <body>
     <container>
       <h1>EARTHQUAKE</h1>
-      <form>
+
+      <!-- The Modal -->
+      <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <form id="editComment">
+            <h2>Edit Comment</h2>
+            <label for="inputEmail4">Name</label>
+            <input type="text" placeholder="Your Name Here" name="author" id="editName">
+            <label for="Author">Comment</label>
+            <input type="text" placeholder="Comment Here" name="comment" id="editComments">
+            <button class="submitBtn" type="submit" id="editBtn">Save</button>
+          </form>
+        </div>
+      </div>
+
+      <form id="addedComment">
+        <h2>Add a Comment</h2>
         <label for="inputEmail4">Name</label>
-        <input minlength="0" type="text" id="nameInput" placeholder="Your Name Here" name="name">
+        <input minlength="0" type="text" id="nameInput" placeholder="Your Name Here" name="author">
         <label for="Author">Comment</label>
         <input minlength="0" type="text" id="commentInput" placeholder="Comment Here" name="comment">
         <button class="submitBtn" type="submit">Submit</button>
@@ -21,9 +39,9 @@
 
     </container>
 
+    <script defer src="modal.js"></script>
     <script defer src="dexie.js"></script>
     <script defer src="app.js"></script>
     <script defer src="dexieMINE.js"></script>
   </body>
-
 </html>

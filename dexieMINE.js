@@ -9,12 +9,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
     getCommentsFromAPI();
     window.loading = setInterval(getCommentsFromAPI,1000000);
   } else if(connection.rtt === 0) {
-    playAround();
+    // playAround();
   }
 });
 
 var deletedIDS = [];
 var addedComments = [];
+var updatedComments = [];
 
 window.loading;
 window.isConnected;
@@ -35,7 +36,7 @@ function updateConnectionStatus(e) {
 async function getCommentsFromAPI(){
   if(addedComments){
      for (var i = 0; i < addedComments.length; i++) {
-       await postData(`https://us-central1-fir-cb-backend.cloudfunctions.net/api/comment/`, addedComments[i]);
+       await postData(`http://localhost:3001/comment/`, addedComments[i]);
      }
      addedComments.length = 0;
      console.log(addedComments);
@@ -46,7 +47,7 @@ async function getCommentsFromAPI(){
      }
      deletedIDS.length = 0;
    }
-    var getComments = await fetch("https://us-central1-fir-cb-backend.cloudfunctions.net/api/comment/")
+    var getComments = await fetch("http://localhost:3001/comment/")
       .then(req => req.json())
       .then(data => data);
 
@@ -83,6 +84,7 @@ async function populateTableWithIndexDBData(){
     var listAuthor = document.createElement('p');
     listAuthor.innerText = comments[i].author;
     listAuthor.dataset.author = comments[i].author;
+    listAuthor.contentEditable = 'true';
     list.append(listAuthor);
 
     var listComment = document.createElement('li');
@@ -101,6 +103,30 @@ async function populateTableWithIndexDBData(){
       e.preventDefault();
       deleteComment(e);
     })
+
+    var editButton = document.createElement('button');
+    editButton.classList.add('editButton');
+    editButton.innerText = 'Edit this comment?';
+    editButton.dataset._id = comments[i]._id;
+    editButton.dataset.name = comments[i].author;
+    editButton.dataset.comment = comments[i].comment;
+    editButton.addEventListener('click', function (e){
+      modal.style.display = 'block';
+      document.getElementById('editName').value = e.target.dataset.name;
+      document.getElementById('editComments').value = e.target.dataset.comment;
+      document.getElementById('editBtn').dataset._id = e.target.dataset._id;
+    })
+
+    // editButton.addEventListener('click', function(e){
+    //   e.preventDefault();
+    //   var myObj = {}
+    //   myObj.author = e.target.parentNode.firstChild.childNodes[0].dataset.author;
+    //   myObj.comment = e.target.parentNode.firstChild.childNodes[1].dataset.comment;
+    //   console.log(myObj);
+    //   editComment(e.target.dataset._id, myObj);
+    // })
+
+    divHolder.append(editButton);
     divHolder.append(deleteBtn);
 
     divComments.append(divHolder);
@@ -108,7 +134,7 @@ async function populateTableWithIndexDBData(){
 }
 
 //GETTING THE ADDED COMMENT DATA
-document.querySelector('form').addEventListener('submit', function(e){
+document.querySelector('#addedComment').addEventListener('submit', function(e){
   e.preventDefault();
   var myObj = {}
   for (var i = 0; i < e.target.length-1; i++) {
@@ -125,6 +151,24 @@ document.querySelector('form').addEventListener('submit', function(e){
   console.log(myObj);
   addComment(myObj);
 })
+
+
+//EDIT FORM
+document.querySelector('#editComment').addEventListener('submit', function(e){
+  e.preventDefault();
+  console.log(e);
+  var myObj = {}
+  for (var i = 0; i < e.target.length-1; i++) {
+    if(e.target[i].name == false || e.target[i].value == false){
+      alert('Name and comment must include something');
+      return;
+    } else {
+      myObj[e.target[i].name] = e.target[i].value;
+    }
+  }
+  editData(document.querySelector('#editBtn').dataset._id, myObj);
+})
+
 
 
 //DELETE COMMENT FROM INDEXDB
@@ -154,6 +198,23 @@ function addComment(obj) {
     addedComments.push(obj);
     // sanitizeComment(obj);
     document.querySelector('form').reset();
+}
+
+
+
+
+//EDIT COMMENT ON DB
+function editComment(id, obj){
+  var updatedComment = db.comments.update(id, obj);
+  updatedComment.then(function(resolved){
+    console.log(resolved);
+  }).catch(function(rejected){
+    console.log(rejected);
+  });
+  var updatedObj = obj;
+  updatedObj.id = id
+  populateTableWithIndexDBData();
+  updatedComments.push(updatedObj);
 }
 
 

@@ -60,7 +60,7 @@
 // })
 
 
-function postData(url = `https://us-central1-fir-cb-backend.cloudfunctions.net/api/comment/`, data = {}) {
+function postData(url = `http://localhost:3001/comment/`, data = {}) {
   console.log('help');
     return fetch(url, {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
@@ -86,7 +86,7 @@ function postData(url = `https://us-central1-fir-cb-backend.cloudfunctions.net/a
 
 
 function deleteData(item) {
-  return fetch(`https://us-central1-fir-cb-backend.cloudfunctions.net/api/comment/${item}`, {
+  return fetch(`http://localhost:3001/comment/${item}`, {
     method: 'DELETE'
   })
   .then(function(response){
@@ -97,3 +97,17 @@ function deleteData(item) {
     return;
   });
 }
+
+
+function editData(id, data) {
+  return fetch(`http://localhost:3001/comment/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  })
+  .then(function(response){
+    response.json();
+  })
+  .catch(function (error){
+    return error;
+  })
+};
