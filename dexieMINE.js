@@ -7,8 +7,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
   });
   if(connection.rtt === 50){
     getCommentsFromAPI();
-    window.loading = setInterval(getCommentsFromAPI,1000000);
-  } else if(connection.rtt === 0) {
+    window.loading = setInterval(getCommentsFromAPI, 1000000);
+  } else if (connection.rtt === 0) {
     // playAround();
   }
 });
@@ -34,10 +34,9 @@ function updateConnectionStatus(e) {
 
 
 async function getCommentsFromAPI(){
+
   if(addedComments){
-     for (var i = 0; i < addedComments.length; i++) {
-       await postData(`http://localhost:3001/comment/`, addedComments[i]);
-     }
+     await addMany(addedComments);
      addedComments.length = 0;
      console.log(addedComments);
    }
@@ -47,7 +46,15 @@ async function getCommentsFromAPI(){
      }
      deletedIDS.length = 0;
    }
-    var getComments = await fetch("http://localhost:3001/comment/")
+   if(updatedComments){
+     for (var i = 0; i < updatedComments.length; i++) {
+      await editData(updatedComments[i].id, updatedComments[i]);
+   }
+   updatedComments.length = 0;
+ }
+
+
+  var getComments = await fetch("http://localhost:3001/comment/")
       .then(req => req.json())
       .then(data => data);
 
@@ -69,6 +76,7 @@ async function getCommentsFromAPI(){
     });
     console.log('IndexDB reload');
 }
+
 
 
 
@@ -166,7 +174,7 @@ document.querySelector('#editComment').addEventListener('submit', function(e){
       myObj[e.target[i].name] = e.target[i].value;
     }
   }
-  editData(document.querySelector('#editBtn').dataset._id, myObj);
+  editComment(document.querySelector('#editBtn').dataset._id, myObj);
 })
 
 
@@ -195,13 +203,25 @@ function addComment(obj) {
     });
 
     populateTableWithIndexDBData();
-    addedComments.push(obj);
-    // sanitizeComment(obj);
-    document.querySelector('form').reset();
+    // addedComments.push(obj);
+    sanitizeComment(obj);
+    document.querySelector('#addedComment').reset();
 }
 
 
-
+//PAGINATION
+function pagination(){
+  var page = db.comments
+    .offset(1 * 3)
+    .limit(3)
+    .toArray();
+    page.then (function(resolved){
+      console.log(resolved);
+    }).catch(function(rejected){
+      console.log(rejected);
+    })
+    console.log(page);
+}
 
 //EDIT COMMENT ON DB
 function editComment(id, obj){
@@ -215,8 +235,22 @@ function editComment(id, obj){
   updatedObj.id = id
   populateTableWithIndexDBData();
   updatedComments.push(updatedObj);
+  modal.style.display = "none";
+
 }
 
+// sanitizing comments to send to API
+function sanitizeComment(obj){
+  var newObj = {};
+  for (var key in obj) {
+    if(key === 'author'){
+      newObj[key] = obj[key];
+    } else if(key === 'comment') {
+      newObj[key] = obj[key];
+    }
+  }
+  addedComments.push(newObj);
+}
 
 
 // let db;
@@ -229,18 +263,4 @@ function editComment(id, obj){
 //         });
 //     }
 //     populateTableWithIndexDBData();
-// }
-
-
-// sanitizing comments to send to API
-// function sanitizeComment(obj){
-//   var newObj = {};
-//   for (var key in obj) {
-//     if(key === 'author'){
-//       newObj['name'] = obj[key];
-//     } else if(key === 'comment') {
-//       newObj[key] = obj[key];
-//     }
-//   }
-//   addedComments.push(newObj);
 // }
