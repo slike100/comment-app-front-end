@@ -6,7 +6,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     updateConnectionStatus(e);
   });
   if(connection.rtt === 50){
-    getCommentsFromAPI();
+    getCommentsFromAPI(count);
     window.loading = setInterval(getCommentsFromAPI, 1000000);
   } else if (connection.rtt === 0) {
     // playAround();
@@ -16,6 +16,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 var deletedIDS = [];
 var addedComments = [];
 var updatedComments = [];
+var count = 1;
+
 
 window.loading;
 window.isConnected;
@@ -33,7 +35,12 @@ function updateConnectionStatus(e) {
 }
 
 
-async function getCommentsFromAPI(){
+async function getCommentsFromAPI(page){
+  if(page == 1){
+    backBtn.style.display = 'none';
+  } else if (page > 1) {
+    backBtn.style.display = 'block';
+  }
 
   if(addedComments){
      await addMany(addedComments);
@@ -53,10 +60,14 @@ async function getCommentsFromAPI(){
    updatedComments.length = 0;
  }
 
-
-  var getComments = await fetch("http://localhost:3001/comment/")
-      .then(req => req.json())
-      .then(data => data);
+  var getComments =
+  await fetch(`http://localhost:3001/comment/${page}`)
+    .then(function(res){
+      return res.json();
+    })
+    .then(function(data){
+      return data
+    });
 
     window.db = new Dexie("comment_database");
     db.version(1).stores({
@@ -92,7 +103,6 @@ async function populateTableWithIndexDBData(){
     var listAuthor = document.createElement('p');
     listAuthor.innerText = comments[i].author;
     listAuthor.dataset.author = comments[i].author;
-    listAuthor.contentEditable = 'true';
     list.append(listAuthor);
 
     var listComment = document.createElement('li');
@@ -125,21 +135,42 @@ async function populateTableWithIndexDBData(){
       document.getElementById('editBtn').dataset._id = e.target.dataset._id;
     })
 
-    // editButton.addEventListener('click', function(e){
-    //   e.preventDefault();
-    //   var myObj = {}
-    //   myObj.author = e.target.parentNode.firstChild.childNodes[0].dataset.author;
-    //   myObj.comment = e.target.parentNode.firstChild.childNodes[1].dataset.comment;
-    //   console.log(myObj);
-    //   editComment(e.target.dataset._id, myObj);
-    // })
-
     divHolder.append(editButton);
     divHolder.append(deleteBtn);
 
     divComments.append(divHolder);
   }
+
+  backBtn.innerText = 'Back';
+  backBtn.setAttribute('id', 'backBtn');
+
+  forwardBtn.innerText = 'Next';
+  forwardBtn.setAttribute('id', 'forwardBtn');
+
+  divComments.append(backBtn);
+  divComments.append(forwardBtn);
+
 }
+
+var forwardBtn = document.createElement('button');
+var backBtn = document.createElement('button');
+
+forwardBtn.addEventListener('click', function(e){
+  e.preventDefault();
+    count++;
+    getCommentsFromAPI(count);
+});
+
+backBtn.addEventListener('click', function(e){
+  e.preventDefault();
+  if(count == 1){
+    backBtn.style.display = 'none'
+    return;
+  } else if (count > 1) {
+    count--;
+    getCommentsFromAPI(count);
+  }
+});
 
 //GETTING THE ADDED COMMENT DATA
 document.querySelector('#addedComment').addEventListener('submit', function(e){
@@ -210,18 +241,18 @@ function addComment(obj) {
 
 
 //PAGINATION
-function pagination(){
-  var page = db.comments
-    .offset(1 * 3)
-    .limit(3)
-    .toArray();
-    page.then (function(resolved){
-      console.log(resolved);
-    }).catch(function(rejected){
-      console.log(rejected);
-    })
-    console.log(page);
-}
+// function pagination(){
+//   var page = db.comments
+//     .offset(1 * 3)
+//     .limit(3)
+//     .toArray();
+//     page.then (function(resolved){
+//       console.log(resolved);
+//     }).catch(function(rejected){
+//       console.log(rejected);
+//     })
+//     console.log(page);
+// }
 
 //EDIT COMMENT ON DB
 function editComment(id, obj){

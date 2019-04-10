@@ -63,7 +63,7 @@ p {
   display: grid;
   grid-column: 2 / span 1;
   grid-row: 2 /span 10;
-  height: 275px;
+  height: 300px;
   width: 70%;
   overflow: scroll;
   margin-top: 2%;

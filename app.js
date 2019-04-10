@@ -140,14 +140,4 @@ function addMany(data) {
     return error;
   })
 }
-
-function pagination(page, numOfResults){
-  return fetch(`http://localhost:3001/comment/${page}/${numOfResults}`)
-  .then(function(response) {
-    console.log(response);
-    // getCommentsFromAPI();
-  })
-  .catch(function (error){
-    return error;
-  });
-}
+  
