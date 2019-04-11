@@ -60,6 +60,17 @@
 // })
 
 
+function getCommentsUpdateCount(page){
+  return fetch(`http://localhost:3001/comment/${page}`)
+    .then(function(res){
+      console.log(res);
+      return res.json();
+    })
+    .then(res => window.getComments = res);
+}
+
+
+
 function postData(url = `http://localhost:3001/comment/`, data = {}) {
   console.log('help');
     return fetch(url, {
@@ -109,7 +120,7 @@ function editData(id, data) {
   })
   .then(function(response){
     console.log(response);
-    getCommentsFromAPI();
+    // getCommentsFromAPI();
     modal.style.display = "none";
   })
   .catch(function (error){
@@ -140,4 +151,3 @@ function addMany(data) {
     return error;
   })
 }
-  
