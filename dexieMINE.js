@@ -13,9 +13,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
   }
 });
 
-var deletedIDS = [];
+var objIDS = '';
+
+var deletedComments = {};
+
 var addedComments = [];
 var updatedComments = [];
+var deletedIDS = [];
 var count = 1;
 
 
@@ -42,32 +46,33 @@ async function getCommentsFromAPI(page){
     backBtn.style.display = 'block';
   }
 
-  if(addedComments){
+  if(addedComments.length > 0){
      await addMany(addedComments);
      addedComments.length = 0;
-     console.log(addedComments);
    }
-   if(deletedIDS){
+   if(deletedIDS.length > 0){
      for (var i = 0; i < deletedIDS.length; i++) {
       await deleteData(deletedIDS[i]);
      }
      deletedIDS.length = 0;
    }
-   if(updatedComments){
-     for (var i = 0; i < updatedComments.length; i++) {
-      await editData(updatedComments[i].id, updatedComments[i]);
+   if(updatedComments.length > 0){
+    for (var i = 0; i < updatedComments.length; i++) {
+    await editData(updatedComments[i].id, updatedComments[i]);
    }
    updatedComments.length = 0;
  }
 
-  var getComments =
+  window.getComments =
   await fetch(`http://localhost:3001/comment/${page}`)
     .then(function(res){
+      console.log(res);
       return res.json();
     })
     .then(function(data){
       return data
     });
+
 
     window.db = new Dexie("comment_database");
     db.version(1).stores({
@@ -75,8 +80,8 @@ async function getCommentsFromAPI(page){
     });
     db.comments.clear();
     // Put some data into it
-    db.comments.bulkPut(getComments).then(function () {
-      console.log(getComments);
+    db.comments.bulkPut(getComments.comment).then(function () {
+      console.log(getComments.comment);
         // Then when data is stored, read from it
         var commentsArr = [];
         return db.comments.each(comment => {
@@ -216,6 +221,7 @@ function deleteComment(event) {
 
   deletedComment.then(function(resolved) {
     console.log(resolved);
+    // objIDS += `"_id":"${event.target.dataset._id}",`;
     deletedIDS.push(event.target.dataset._id)
     populateTableWithIndexDBData();
   }).catch(function(rejected) {
