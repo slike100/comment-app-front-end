@@ -1,5 +1,4 @@
 //POPULATE UI WITH IndexDB DATA
-console.log('i exisdt');
 async function populateTableWithIndexDBData(){
   var divComments = document.querySelector('.comments');
   divComments.innerHTML = '';

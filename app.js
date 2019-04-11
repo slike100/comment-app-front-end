@@ -151,3 +151,20 @@ function addMany(data) {
     return error;
   })
 }
+
+function ronSwanson(){
+   return fetch(`https://ron-swanson-quotes.herokuapp.com/v2/quotes`)
+    .then(function(res){
+      return res.json();
+  })
+    .then(function(res){
+      var myObj = {};
+      var pubDate = new Date();
+      console.log(res);
+      myObj['_id'] = Math.random();
+      myObj.author = 'Ron Swanson'
+      myObj.comment = res[0];
+      myObj['pubDate'] = pubDate.toString();
+      addComment(myObj);
+  });
+}

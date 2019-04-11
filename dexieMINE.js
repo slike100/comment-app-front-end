@@ -1,23 +1,20 @@
 //GLOBAL VARIABLES FOR COMPARISON
-window.addEventListener('DOMContentLoaded', (event) => {
+window.addEventListener('DOMContentLoaded', async (event) => {
   connection.addEventListener('change', function(e){
     console.log(e);
     e.preventDefault();
     updateConnectionStatus(e);
   });
   if(connection.rtt === 50){
-    getCommentsFromAPI(count);
-    window.loading = setInterval(getCommentsFromAPI, 1000000);
+    await getCommentsFromAPI(count);
+    ronSwanson();
+    setInterval(ronSwanson, 60000);
+    window.loading = setInterval(getCommentsFromAPI, 300000);
   }
-  // } else if (connection.rtt === 0) {
-  //   // playAround();
-  // }
 });
 
-var objIDS = '';
 
 var deletedComments = {};
-
 var addedComments = [];
 var updatedComments = [];
 var deletedIDS = [];
@@ -157,22 +154,6 @@ function addComment(obj) {
 }
 
 
-// PAGINATION
-// function pagination(){
-//   var page = db.comments
-//     .offset(1 * 3)
-//     .limit(3)
-//     .toArray();
-//     page.then (function(resolved){
-//       console.log(resolved);
-//     }).catch(function(rejected){
-//       console.log(rejected);
-//     })
-//     console.log(page);
-// }
-
-
-
 //EDIT COMMENT ON DB
 function editComment(id, obj){
   var updatedComment = db.comments.update(id, obj);
@@ -188,6 +169,21 @@ function editComment(id, obj){
   modal.style.display = "none";
 
 }
+
+
+// PAGINATION
+// function pagination(){
+//   var page = db.comments
+//     .offset(1 * 3)
+//     .limit(3)
+//     .toArray();
+//     page.then (function(resolved){
+//       console.log(resolved);
+//     }).catch(function(rejected){
+//       console.log(rejected);
+//     })
+//     console.log(page);
+// }
 
 // sanitizing comments to send to API
 function sanitizeComment(obj){
