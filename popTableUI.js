@@ -1,4 +1,8 @@
 //POPULATE UI WITH IndexDB DATA
+
+// $(document).on('click','.deleteBtn',deleteStuff)
+
+
 async function populateTableWithIndexDBData(){
   var divComments = document.querySelector('.comments');
   divComments.innerHTML = '';

@@ -14,7 +14,6 @@ window.addEventListener('DOMContentLoaded', async (event) => {
 });
 
 
-var deletedComments = {};
 var addedComments = [];
 var updatedComments = [];
 var deletedIDS = [];
@@ -50,12 +49,12 @@ async function getCommentsFromAPI(page){
      await addMany(addedComments);
      addedComments.length = 0;
    }
+
    if(deletedIDS.length > 0){
-     for (var i = 0; i < deletedIDS.length; i++) {
-      await deleteData(deletedIDS[i]);
-     }
-     deletedIDS.length = 0;
+    await deleteAll(deletedIDS);
+    deletedIDS.length = 0;
    }
+
    if(updatedComments.length > 0){
     for (var i = 0; i < updatedComments.length; i++) {
     await editData(updatedComments[i].id, updatedComments[i]);
@@ -130,7 +129,6 @@ function deleteComment(event) {
 
   deletedComment.then(function(resolved) {
     console.log(resolved);
-    // objIDS += `"_id":"${event.target.dataset._id}",`;
     deletedIDS.push(event.target.dataset._id)
     populateTableWithIndexDBData();
   }).catch(function(rejected) {

@@ -109,6 +109,23 @@ function deleteData(item) {
   });
 }
 
+function deleteAll(data) {
+  return fetch(`http://localhost:3001/comment/deleteMany`, {
+    method: 'DELETE',
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data)
+  })
+  .then(function(response){
+    console.log(response);
+    // fetchComments();
+  })
+  .catch(function (error) {
+    return;
+  });
+}
+
 
 function editData(id, data) {
   return fetch(`http://localhost:3001/comment/${id}`, {
